@@ -1,0 +1,321 @@
+#!/usr/bin/env bash
+##################
+change_the_terminal_color_scheme() {
+    case "${LINUX_DISTRO}" in
+    Android) bash ${TMOE_ZSH_TERMUX_PATH}/colors.sh ;;
+    *)
+        printf '%s\n' '非常抱歉，此功能只支持安卓'
+        printf "%s\n" "Sorry, this feature only supports Android"
+        press_enter_to_return
+        zsh_itemized_configuration_menu
+        ;;
+    esac
+}
+###############
+check_fonts_sha256hash() {
+    LOCAL_FILE_SHA256HASH=$(sha256sum nerd_fonts.tar.xz)
+    CORRENT_SHA256HASH=$(sed -n p sha256sum.txt)
+    case ${LOCAL_FILE_SHA256HASH} in
+    ${CORRENT_SHA256HASH}) ;;
+    *)
+        printf "${PURPLE}%s${RESET}" "校验本地字体包的sha256hash值出错,请重新下载。"
+        rm -fv nerd_fonts.tar.xz
+        ;;
+    *) ;;
+    esac
+}
+git_clone_nerd_fonts() {
+    printf "${BLUE}%s${RESET}\n" "${LOCAL_FONT_DIR}/fonts"
+    if [ -e "${LOCAL_FONT_DIR}/nerd_fonts.tar.xz" ]; then
+        cd ${LOCAL_FONT_DIR}
+        check_fonts_sha256hash
+        sudo tar -Jxvf nerd_fonts.tar.xz
+        xdg-open "${LOCAL_FONT_DIR}/fonts" || sudo su - ${CURRENT_USER_NAME} -c "xdg-open ${LOCAL_FONT_DIR}/fonts"
+    else
+        printf "%s\n" "Do you want to download it?[Y/n]"
+        do_you_want_to_continue
+        rm -rvf ${LOCAL_FONT_DIR} 2>/dev/null || sudo rm -rvf ${LOCAL_FONT_DIR}
+        mkdir -pv ${LOCAL_FONT_DIR} 2>/dev/null || sudo mkdir -pv ${LOCAL_FONT_DIR}
+        cd ${TMPDIR}
+        if [[ -e .mono-nerd-fonts ]]; then
+            rm -rfv .mono-nerd-fonts || sudo rm -rvf .mono-nerd-fonts
+        fi
+        git clone --depth=1 https://gitee.com/ak2/mono-nerd-fonts.git ${TMPDIR}/.mono-nerd-fonts
+        cd .mono-nerd-fonts
+        cat .nerd_fonts_0* >nerd_fonts.tar.xz
+        sudo mv -f nerd_fonts.tar.xz sha256sum.txt ${LOCAL_FONT_DIR}
+        cd ${LOCAL_FONT_DIR}
+        sudo tar -Jxvf nerd_fonts.tar.xz
+        sudo rm -rvf .git /tmp/.mono-nerd-fonts
+        sudo mkfontscale 2>/dev/null
+        sudo mkfontdir 2>/dev/null
+        sudo fc-cache 2>/dev/null
+        printf "${BLUE}%s${RESET}\n" "${LOCAL_FONT_DIR}/fonts"
+        xdg-open "${LOCAL_FONT_DIR}/fonts" || sudo su - ${CURRENT_USER_NAME} -c "xdg-open ${LOCAL_FONT_DIR}/fonts"
+    fi
+}
+##########
+termux_git_clone_nerd_fonts() {
+    printf "${BLUE}%s${RESET}\n" "${LOCAL_FONT_DIR}/fonts"
+    if [ -e "${LOCAL_FONT_DIR}/nerd_fonts.tar.xz" ]; then
+        cd ${LOCAL_FONT_DIR}
+        tar -Jxvf nerd_fonts.tar.xz
+    else
+        printf "%s\n" "Do you want to download it?[Y/n]"
+        do_you_want_to_continue
+        cd ${TMPDIR}
+        chmod -Rv 777 ${LOCAL_FONT_DIR} 2>/dev/null
+        rm -rvf ${LOCAL_FONT_DIR} 2>/dev/null
+        mkdir -pv ${LOCAL_FONT_DIR}
+        git clone --depth=1 https://gitee.com/ak2/mono-nerd-fonts.git ${LOCAL_FONT_DIR}
+        cd ${LOCAL_FONT_DIR}
+        cat .nerd_fonts_0* >nerd_fonts.tar.xz
+        tar -Jxvf nerd_fonts.tar.xz
+        rm -rvf .git .nerd_fonts_0*
+        printf "${BLUE}%s${RESET}\n" "${LOCAL_FONT_DIR}/fonts"
+    fi
+    bash ${TMOE_ZSH_TERMUX_PATH}/fonts.sh
+}
+download_nerd_fonts_content() {
+    case "${LINUX_DISTRO}" in
+    Android)
+        LOCAL_FONT_DIR=${TMOE_ZSH_FONTS_PATH}
+        termux_git_clone_nerd_fonts
+        ;;
+    *)
+        LOCAL_FONT_DIR="/usr/local/share/fonts/nerd-fonts/terminal-fonts"
+        git_clone_nerd_fonts
+        ;;
+    esac
+
+}
+##################
+change_the_terminal_font() {
+    case "${LINUX_DISTRO}" in
+    Android) bash ${TMOE_ZSH_TERMUX_PATH}/fonts.sh ;;
+    *)
+        #printf '%s\n' '非常抱歉，此功能只支持安卓'
+        #printf "%s\n" "Sorry, this feature only supports Android"
+        #press_enter_to_return
+        #zsh_itemized_configuration_menu
+        LOCAL_FONT_DIR="/usr/local/share/fonts/nerd-fonts/terminal-fonts"
+        printf "${BLUE}%s${RESET}\n" "${LOCAL_FONT_DIR}/fonts"
+        if [ -e "${LOCAL_FONT_DIR}/fonts/Iosevka/Iosevka Term Nerd Font Complete Mono Windows Compatible.ttf" ]; then
+            #su - ${CURRENT_USER_NAME} -c ""
+            xdg-open "${LOCAL_FONT_DIR}/fonts" || sudo su - ${CURRENT_USER_NAME} -c "xdg-open ${LOCAL_FONT_DIR}/fonts"
+        else
+            sudo mv -v ${LOCAL_FONT_DIR} ${LOCAL_FONT_DIR}.bak 2>/dev/null
+            sudo mkdir -pv ${LOCAL_FONT_DIR}
+            sudo git clone --depth=1 https://gitee.com/ak2/termux-fonts.git ${LOCAL_FONT_DIR}
+            cd ${LOCAL_FONT_DIR}
+            sudo tar -Jxvf fonts.tar.xz
+            sudo rm -rvf .git fonts.tar.xz
+            sudo mkfontscale 2>/dev/null
+            sudo mkfontdir 2>/dev/null
+            sudo fc-cache 2>/dev/null
+            printf "${BLUE}%s${RESET}\n" "${LOCAL_FONT_DIR}/fonts"
+            xdg-open "${LOCAL_FONT_DIR}/fonts" || sudo su - ${CURRENT_USER_NAME} -c "xdg-open ${LOCAL_FONT_DIR}/fonts"
+        fi
+        ;;
+    esac
+}
+################
+edit_zshrc_manually() {
+    if [ $(command -v editor) ]; then
+        editor ${HOME}/.zshrc
+    elif [ $(command -v vim) ]; then
+        vim ${HOME}/.zshrc
+    elif [ $(command -v nano) ]; then
+        nano ${HOME}/.zshrc
+    else
+        vi ${HOME}/.zshrc
+    fi
+}
+###########
+zsh_itemized_configuration_menu() {
+    RETURN_TO_WHERE='zsh_itemized_configuration_menu'
+    #17 50 5
+    #zsh主题全平台通用,Termux配色和字体仅适用Android Termux,xfce4终端配色仅适用于linux。You can use zsh theme on all platforms,but termux colors and fonts are only available for Android.
+    TMOE_OPTION=$("${TUI_BIN:-dialog}" --title "Itemized Configuration" --menu "您想要配置哪个项目?\nWhich configuration do you want to modify?" 0 0 0 \
+        "1" "edit .zshrc手动编辑配置" \
+        "2" "zsh themes 主题" \
+        "3" "fonts 字体基础包(17.9MiB)" \
+        "4" "nerd-fonts-DLC 字体扩展包(139MiB)" \
+        "5" "konsole终端配色 color schemes" \
+        "6" "xfce4-terminal终端配色 color schemes" \
+        "7" "Termux color schemes(only for Android)" \
+        "8" "Set zsh as the default(默认) shell" \
+        "0" "🌚 Back to the main menu 返回主菜单" \
+        3>&1 1>&2 2>&3)
+    ###########
+    case "${TMOE_OPTION}" in
+    0 | "") tmoe_zsh_main_menu ;;
+    1) edit_zshrc_manually ;;
+    2) bash ${TMOE_ZSH_TERMUX_PATH}/themes.sh ;;
+    3) change_the_terminal_font ;;
+    4) download_nerd_fonts_content ;;
+    5) configure_konsole_terminal_color ;;
+    6) configure_xfce_terminal_color ;;
+    7) change_the_terminal_color_scheme ;;
+    8) configure_default_shell ;;
+    esac
+    ##############################
+    press_enter_to_return
+    ${RETURN_TO_WHERE}
+}
+#################
+configure_konsole_terminal_color() {
+    this_feature_is_not_support_android
+    if [[ ! -d "/usr/share/konsole" ]]; then
+        printf "%s\n" "检测到konsole终端目录不存在，您当前可能没有安装konsole终端"
+    fi
+    if [ ! $(command -v konsole) ]; then
+        DEPENDENCIES='konsole'
+        printf "${GREEN}%s ${BLUE}%s${RESET}\n" "${TMOE_INSTALLATION_COMMAND}" "${DEPENDENCIES}"
+        do_you_want_to_continue
+        printf "%s\n" "Tmoe-zsh will ${YELLOW}install${RESET} relevant ${BLUE}dependencies${RESET} for you."
+        case $(id -u) in
+        0)
+            #${TMOE_UPDATE_COMMAND}
+            ${TMOE_INSTALLATION_COMMAND} ${DEPENDENCIES}
+            ;;
+        *)
+            #sudo ${TMOE_UPDATE_COMMAND}
+            sudo ${TMOE_INSTALLATION_COMMAND} ${DEPENDENCIES}
+            ;;
+        esac
+    fi
+    printf "${PURPLE}%s${RESET}\n" "/usr/share/konsole"
+    printf "%s\n" "正在添加konsole终端配色方案，您需要手动在终端设置里进行修改。"
+    cd ${TMPDIR}
+    rm_color_scheme_tar_xz
+    wget -qO "colorschemes.tar.xz" 'https://gitee.com/ak2/konsole-color-schemes/raw/master/konsole.tar.xz'
+    sudo tar -Jxvf "colorschemes.tar.xz" -C /usr/share || su -c "tar -Jxvf colorschemes.tar.xz -C /usr/share"
+    rm_color_scheme_tar_xz
+    printf "${GREEN}%s${RESET}\n" "You need to manually modify the color scheme in the terminal settings."
+}
+#################
+download_iosevka_font() {
+    wget -qO 'Iosevka.tar.xz' 'https://gitee.com/ak2/inconsolata-go-font/raw/master/Iosevka-Term-Mono.tar.xz' || curl -Lo 'Iosevka-Term-Mono.tar.xz' "https://github.com/cu233/inconsolata-go-font/raw/master/Iosevka-Term-Mono.tar.xz"
+    tar -Jxvf 'Iosevka-Term-Mono.tar.xz'
+    tar -Jxvf 'Iosevka.tar.xz'
+    rm -f 'Iosevka.tar.xz'
+    mv -f Iosevka.ttf '/usr/share/fonts/truetype/iosevka/Iosevka-Term-Mono.ttf'
+}
+###############
+this_feature_is_not_support_android() {
+    case "${LINUX_DISTRO}" in
+    Android)
+        printf '%s\n' 'Sorry，此功能不支持Android'
+        press_enter_to_return
+        zsh_itemized_configuration_menu
+        ;;
+    esac
+}
+rm_color_scheme_tar_xz() {
+    if [[ -e "colorschemes.tar.xz" ]]; then
+        sudo chmod 777 "colorschemes.tar.xz" || su -c "chmod 777 colorschemes.tar.xz"
+        sudo rm -fv "colorschemes.tar.xz" || su -c "rm -fv colorschemes.tar.xz"
+    fi
+}
+configure_xfce_terminal_color() {
+    this_feature_is_not_support_android
+    if [ ! -d "/usr/share/xfce4/terminal" ]; then
+        printf "%s\n" "检测到xfce终端目录不存在，您当前可能没有安装xfce终端"
+        mkdir -pv /usr/share/xfce4/terminal || sudo mkdir -pv /usr/share/xfce4/terminal
+    fi
+    if [ ! $(command -v xfce4-terminal) ]; then
+        DEPENDENCIES='xfce4-terminal'
+        printf "${GREEN}%s ${BLUE}%s${RESET}\n" "${TMOE_INSTALLATION_COMMAND}" "${DEPENDENCIES}"
+        do_you_want_to_continue
+        printf "%s\n" "Tmoe-zsh will ${YELLOW}install${RESET} relevant ${BLUE}dependencies${RESET} for you."
+        case $(id -u) in
+        0)
+            #${TMOE_UPDATE_COMMAND}
+            ${TMOE_INSTALLATION_COMMAND} ${DEPENDENCIES}
+            ;;
+        *)
+            #sudo ${TMOE_UPDATE_COMMAND}
+            sudo ${TMOE_INSTALLATION_COMMAND} ${DEPENDENCIES}
+            ;;
+        esac
+    fi
+
+    #cd /usr/share/xfce4/terminal
+    cd ${TMPDIR}
+    printf "%s\n" "/usr/share/xfce4/terminal"
+    printf "${PURPLE}%s${RESET}\n" "正在添加xfce4终端配色方案，您需要手动在终端设置里进行修改。"
+    rm_color_scheme_tar_xz
+    wget -qO "colorschemes.tar.xz" 'https://gitee.com/mo2/xfce-themes/raw/terminal/colorschemes.tar.xz'
+    sudo tar -Jxvf "colorschemes.tar.xz" -C /usr/share/xfce4/terminal || su -c "tar -Jxvf colorschemes.tar.xz -C /usr/share/xfce4/terminal"
+    rm_color_scheme_tar_xz
+    DEPENDENCIES=""
+    # if [ ! -e /usr/bin/mkfontscale ]; then
+    #     DEPENDENCIES="${DEPENDENCIES} xfonts-utils"
+    # fi
+
+    if [ ! -e /usr/bin/fc-cache ]; then
+        DEPENDENCIES="${DEPENDENCIES} fontconfig"
+    fi
+    if [ ! -z "$DEPENDENCIES" ]; then
+        printf "%s\n" "Tmoe-zsh will ${YELLOW}install${RESET} relevant ${BLUE}dependencies${RESET} for you."
+        case $(id -u) in
+        0)
+            ${TMOE_UPDATE_COMMAND}
+            ${TMOE_INSTALLATION_COMMAND} ${DEPENDENCIES}
+            ;;
+        *)
+            sudo ${TMOE_UPDATE_COMMAND}
+            sudo ${TMOE_INSTALLATION_COMMAND} ${DEPENDENCIES}
+            ;;
+        esac
+    fi
+    if [[ ! -f '/usr/share/fonts/truetype/iosevka/Iosevka.ttf' && ! -f '/usr/share/fonts/truetype/iosevka/Iosevka-Term-Mono.ttf' ]]; then
+        printf '%s\n' '正在刷新字体缓存...'
+        mkdir -pv /usr/share/fonts/truetype/iosevka/
+        cd /tmp
+        if [ -e "font.ttf" ]; then
+            mv -f font.ttf '/usr/share/fonts/truetype/iosevka/Iosevka.ttf'
+        else
+            download_iosevka_font
+        fi
+        cd /usr/share/fonts/truetype/iosevka/
+        mkfontscale
+        mkfontdir
+        fc-cache
+    fi
+    printf "${GREEN}%s${RESET}\n" "You need to manually modify the color scheme in the terminal settings."
+}
+########################################################
+android_default_shell() {
+    if ("${TUI_BIN:-dialog}" --title "android_default_shell" --yes-button 'Yes' --no-button 'no' --yesno 'Android在配置本工具时，已经将zsh设置为默认shell了，您也可以在终端下输chsh -s bash或chsh -s zsh来切换默认shell 。您是否需要将默认shell设置为zsh?' 12 50); then
+        chsh -s zsh
+    else
+        ${RETURN_TO_WHERE}
+    fi
+}
+##########
+gnu_linux_default_shell() {
+    if ("${TUI_BIN:-dialog}" --title "gnu_linux_default_shell" --yes-button 'Yes' --no-button 'no' --yesno 'Linux在设置时需要输密码,若需手动配置，请输chsh -s $(command -v zsh)或chsh -s /bin/zsh,您是否需要将默认shell设置为zsh?' 10 50); then
+        for i in /usr/bin/zsh /bin/zsh /usr/local/bin/zsh $(command -v zsh); do
+            if [[ -e ${i} ]]; then
+                chsh -s ${i} || sudo chsh -s ${i}
+                break
+            fi
+        done
+    else
+        ${RETURN_TO_WHERE}
+    fi
+}
+#############################################################
+configure_default_shell() {
+    case "${LINUX_DISTRO}" in
+    Android) android_default_shell ;;
+    *) gnu_linux_default_shell ;;
+    esac
+    printf "%s\n" "${YELLOW}已将默认shell切换为zsh,按回车键返回。Press enter to return.${RESET}"
+    read
+    ${RETURN_TO_WHERE}
+}
+#####################################################
+zsh_itemized_configuration_menu

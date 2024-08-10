@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+#########
+zsh_faq_menu() {
+    RETURN_TO_WHERE='zsh_faq_menu'
+    #20 50 7
+    TMOE_OPTION=$("${TUI_BIN:-dialog}" --title "FAQ(よくある質問)" \
+        --menu "您有哪些疑问？\nWhat questions do you have?" 0 50 0 \
+        "1" "command-not-found插件配置失败" \
+        "2" "fzf-tab插件加载异常" \
+        "3" "Fix permissions修复文件权限" \
+        "4" "Conf does not take effect配置文件未生效" \
+        "5" "quit the readme reader退出文档阅读器" \
+        "0" "🌚 Back to the main menu 返回主菜单" \
+        3>&1 1>&2 2>&3)
+    #############
+    case ${TMOE_OPTION} in
+    0 | "") tmoe_zsh_main_menu ;;
+    1) remove_plugin_command_not_found ;;
+    2) reset_fzf_tab ;;
+    3)
+        ZSH_PATH="${ZINIT_DIR} ${HOME}/.zshrc ${TMOE_ZSH_GIT_DIR} ${HOME}/.zsh_history"
+        fix_zsh_folder_permissions
+        printf "%s\n" "若无法修复，则请手动执行${GREEN}compaudit | xargs chmod g-w,o-w${RESET}"
+        printf "${GREEN}%s ${PURPLE}%s ${BLUE}%s${RESET}\n" "sudo -E chown -Rv" "${CURRENT_USER_NAME}:${CURRENT_USER_GROUP}" "${ZINIT_DIR} ${HOME}/.p10k.zsh ${TMOE_ZSH_DIR}"
+        sudo -E chown -Rv ${CURRENT_USER_NAME}:${CURRENT_USER_GROUP} ${ZINIT_DIR} ${HOME}/.p10k.zsh ${TMOE_ZSH_DIR}
+        if [ "${LINUX_DISTRO}" != "Android" ] && [ ${HOME} != "/root" ]; then
+            printf "%s\n" "您亦可将${HOME}目录的权限修改为${CURRENT_USER_NAME}用户和${CURRENT_USER_GROUP}用户组"
+            printf "%s\n" "${RED}sudo chown -R ${CURRENT_USER_NAME}:${CURRENT_USER_GROUP} ${HOME}${RESET}"
+        fi
+        ;;
+    4)
+        printf "%s\n" "请手动执行${GREEN}. ~/.zshrc${RESET}或者是${GREEN}source ${HOME}/.zshrc${RESET}"
+        printf "%s\n" "Please try running ${GREEN}source ~/.zshrc${RESET}"
+        #source ${HOME}/.zshrc
+        ;;
+    5) type_q_to_quit ;;
+    esac
+    ###############
+    press_enter_to_return
+    zsh_faq_menu
+}
+###########
+type_q_to_quit() {
+    printf "%s\n" "You can type ${GREEN}q${RESET} to ${RED}quit${RESET} reader,输${GREEN}q${RESET}${RED}退出${RESET}"
+}
+###################
+reset_fzf_tab() {
+    cat <<-EOF
+		Do you want to disable fzf-tab extra_opt_02 ?
+	EOF
+    do_you_want_to_continue
+    #git_clone_fzf_tab
+    #sudo apt purge command-not-found || apt purge command-not-found
+    sed -i 's@ALOXAF_FZF_TAB_EXTRA=.*@ALOXAF_FZF_TAB_EXTRA=01@' ${HOME}/.zshrc
+}
+#########
+remove_plugin_command_not_found() {
+    cat <<-EOF
+		Do you want to remove command-not-found plugin ?
+		${RED}apt purge${RESET} ${BLUE}command-not-found${RESET}
+	EOF
+    do_you_want_to_continue
+    sudo apt purge command-not-found || apt purge command-not-found
+}
+#########
+zsh_faq_menu
