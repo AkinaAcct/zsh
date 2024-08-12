@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 #################################################
+
 set_tui_bin() {
 	case $(uname -o) in
 	"Android") TUI_BIN="dialog" ;;
