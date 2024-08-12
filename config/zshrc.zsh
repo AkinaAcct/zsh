@@ -152,3 +152,7 @@ for i (batcat bat) {
     }
 }
 ########
+#指定 GPG_TTY
+export GPG_TTY=$(tty)
+#指定 EDITOR 为 nvim
+export EDITOR=nvim

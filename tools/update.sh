@@ -32,7 +32,7 @@ check_tmoe_zsh_theme_completion_version() {
     if [ ! -e "${ZSH_THEME_COMPLETION_VERSION_TXT}" ]; then
         UPDATE_ZSH_THEME_COMPLETION=true
     else
-        THE_LATEST_ZSH_COMPLETION_VERSION=$(curl -sL ${TMOE_GIT_REPO}/raw/master/share/completion/version.txt)
+        THE_LATEST_ZSH_COMPLETION_VERSION=$(curl -sL ${TMOE_GIT_REPO}/raw/main/share/completion/version.txt)
         CURRENT_ZSH_THEME_COMPLETTION_VERSION="$(cat ${ZSH_THEME_COMPLETION_VERSION_TXT} | head -n 1)"
         case ${THE_LATEST_ZSH_COMPLETION_VERSION} in
         "") UPDATE_ZSH_THEME_COMPLETION=true ;;
@@ -135,20 +135,20 @@ git_pull_powerlevel_10k() {
     POWER_LEVEL_DIR="${ZINIT_THEME_DIR}/powerlevel10k"
     if [ -e "${POWER_LEVEL_DIR}/.git" ]; then
         cd "${POWER_LEVEL_DIR}"
-        tmoe_git_pull_origin_master
+        tmoe_git_pull_origin_main
     fi
 }
 ################
 git_pull_zinit() {
     cd ${ZINIT_DIR}/bin
-    tmoe_git_pull_origin_master
+    tmoe_git_pull_origin_main
     git_pull_fast_syntax_highlighting
     git_pull_zsh_autosuggestions
 }
 #############
-tmoe_git_pull_origin_master() {
-    git reset --hard origin/master
-    git pull --rebase --stat --depth=1 origin master --allow-unrelated-histories || git rebase --skip
+tmoe_git_pull_origin_main() {
+    git reset --hard origin/main
+    git pull --rebase --stat --depth=1 origin main --allow-unrelated-histories || git rebase --skip
     case "${?}" in
     0) ;;
     *)
@@ -162,21 +162,21 @@ tmoe_git_pull_origin_master() {
 git_pull_fast_syntax_highlighting() {
     if [ -e "${FAST_SYNTAX_HIGH_LIGHTING_PLUGIN_DIR}/.git" ]; then
         cd ${FAST_SYNTAX_HIGH_LIGHTING_PLUGIN_DIR}
-        tmoe_git_pull_origin_master
+        tmoe_git_pull_origin_main
     fi
 }
 ###########
 git_pull_zsh_autosuggestions() {
     if [ -e "${ZSH_AUTO_SUGGESTIONS_PLUGIN_DIR}/.git" ]; then
         cd ${ZSH_AUTO_SUGGESTIONS_PLUGIN_DIR}
-        tmoe_git_pull_origin_master
+        tmoe_git_pull_origin_main
     fi
 }
 #############
 git_pull_oh_my_zsh() {
     cd ${OMZ_DIR}
-    git reset --hard origin/master
-    git pull --rebase --stat --depth=1 origin master --allow-unrelated-histories || git rebase --skip
+    git reset --hard origin/main
+    git pull --rebase --stat --depth=1 origin main --allow-unrelated-histories || git rebase --skip
     #printf "%s\n" "若oh-my-zsh更新失败，则请手动输${BLUE}zsh ${OMZ_DIR}/tools/upgrade.sh${RESET}" && zsh "${OMZ_DIR}/tools/upgrade.sh"
 }
 ###########

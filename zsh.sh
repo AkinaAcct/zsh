@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #################################################
-
+set -x
 set_tui_bin() {
 	case $(uname -o) in
 	"Android") TUI_BIN="dialog" ;;
@@ -483,8 +483,8 @@ git_clone_tmoe_zsh() {
 ######################################################
 git_pull_tmoe_zsh() {
 	cd ${TMOE_ZSH_GIT_DIR}
-	git reset --hard origin/master
-	git pull --rebase --stat origin master --allow-unrelated-histories || git rebase --skip
+	git reset --hard origin/main
+	git pull --rebase --stat origin main --allow-unrelated-histories || git rebase --skip
 	case "${?}" in
 	0) ;;
 	*)
