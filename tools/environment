@@ -224,7 +224,7 @@ check_gnu_linux_dependencies() {
 ########
 check_gnu_linux_dependencies_01() {
     DEPENDENCIES=""
-    DEPENDENCIES_02='command-not-found zsh git pv wget xz-utils whiptail'
+    DEPENDENCIES_02='command-not-found zsh git pv wget xz-utils whiptail neovim'
     case "${LINUX_DISTRO}" in
     debian)
         #apt-file为command-not-found的依赖

@@ -259,6 +259,8 @@ add_zinit_plugin_fzf_tab() {
     sed -i 's@^.*/fzf-tab@#&@g' "${HOME}/.zshrc"
     cat >>${HOME}/.zshrc <<-'EOF'
 [[ $(command -v fzf) ]] && zinit ice lucid pick"fzf-tab.zsh" && zinit light _local/fzf-tab  #aloxaf:fzf-tab 是一个能够极大提升 zsh 补全体验的插件。它通过 hook zsh 补全系统的底层函数 compadd 来截获补全列表，从而实现了在补全命令行参数、变量、目录栈和文件时都能使用 fzf 进行选择的功能。Replace zsh's default completion selection menu with fzf! 
+export EDITOR=nvim # 制定默认编辑器为 nvim
+export GPG_TTY=$(tty) # 修复 gnupg 找不到 tty 的问题
 EOF
 }
 ############
