@@ -76,10 +76,10 @@ zinit ice lucid wait="2" pick"sudo.plugin.zsh" && zinit light _local/sudo #Easil
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh # powerlevel10k的prompt
 #######
 # ALIASES
-alias ...=../..
-alias ....=../../..
-alias .....=../../../..
-alias ......=../../../../..
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
 alias 1='cd -'
 alias 2='cd -2'
 alias 3='cd -3'
@@ -94,6 +94,7 @@ alias afind='ack -il'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias gc1='git clone --recursive --depth=1'
+alias gpul="git pull"
 alias globurl='noglob urlglobber '
 alias grep='grep --color=auto'
 alias md='mkdir -p'
