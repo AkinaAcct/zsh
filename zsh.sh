@@ -14,7 +14,7 @@ show_tmoe_zsh_package_info() {
 		Priority: optional
 		Section: shells
 		Maintainer: 2moe <25324935+2moe@users.noreply.github.com>, AkinaAcct <108107785+AkinaAcct@users.noreply.github.com>
-        Depends: bat (>= 0.12.1), binutils (>= 2.28-5), curl (>= 7.52.1) | wget (>= 1.18-5), diffutils (>= 1:3.5-3), exa(>= 0.8.0), fzf (>= 0.20.0), git, grep, less, pv (>= 1.6.0), sed (>= 4.4-1), sudo (>= 1.8.19p1-2.1), tar (>= 1.29b-1.1), whiptail (>= 0.52.19), xz-utils (>= 5.2.2), zsh (>= 5.3.0), neovim (>= 0.10)
+        Depends: bat (>= 0.12.1), binutils (>= 2.28-5), curl (>= 7.52.1) | wget (>= 1.18-5), diffutils (>= 1:3.5-3), eza(>= 0.8.0), fzf (>= 0.20.0), git, grep, less, pv (>= 1.6.0), sed (>= 4.4-1), sudo (>= 1.8.19p1-2.1), tar (>= 1.29b-1.1), whiptail (>= 0.52.19), xz-utils (>= 5.2.2), zsh (>= 5.3.0), neovim (>= 0.10)
 		Recommends: command-not-found, eatmydata, fonts-powerline, gzip, htop
 		Suggests: lolcat, micro, neofetch, zstd
 		Homepage: https://github.com/AkinaAcct/zsh

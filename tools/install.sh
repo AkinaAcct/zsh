@@ -142,8 +142,8 @@ git_clone_zinit_and_omz() {
         cp ${TMOE_ZSH_GIT_DIR}/config/zshrc.zsh "${HOME}/.zshrc"
     fi
 
-    if [ $(command -v exa) ]; then
-        EXA_VERSION=$(exa --version 2>&1 | head -n 1 | awk '{print $NF}')
+    if [ $(command -v eza) ]; then
+        EXA_VERSION=$(eza --version 2>&1 | head -n 1 | awk '{print $NF}')
         case ${EXA_VERSION} in
         v0.[0-8].*) sed -i 's@ --icons@@g' "${HOME}/.zshrc" ;;
         esac
@@ -437,12 +437,12 @@ tips_of_tmoe_zsh_01() {
     输入${GREEN}bat -L${RESET}获取支持的语言
     ${GREEN}lcat${RESET}命令为原版cat
     ------------
-    ${BOLD}${YELLOW}应用名称 APP NAME${RESET}${RESET}:${BOLD}${BLUE}exa${RESET}${RESET}
-    ${BOLD}${YELLOW}命令COMMAND${RESET}${RESET}:${BOLD}${BLUE}exa${RESET}${RESET}
+    ${BOLD}${YELLOW}应用名称 APP NAME${RESET}${RESET}:${BOLD}${BLUE}eza${RESET}${RESET}
+    ${BOLD}${YELLOW}命令COMMAND${RESET}${RESET}:${BOLD}${BLUE}eza${RESET}${RESET}
     alias lls=ls
-    alias l="exa -lbah"
-    若您的系统满足依赖条件，则ls将alias为exa.
-    exa是一款优秀的ls替代品,拥有更好的文件展示体验,输出结果更快,使用rust编写。
+    alias l="eza -lbah"
+    若您的系统满足依赖条件，则ls将alias为eza.
+    eza是一款优秀的ls替代品,拥有更好的文件展示体验,输出结果更快,使用rust编写。
     Exa is a modern version of ls. 
     输入${GREEN}l${RESET},将显示当前目录的文件列表。
     输入${GREEN}lst${RESET},将展示类似于tree的树状列表。
@@ -465,7 +465,7 @@ tips_of_tmoe_zsh_01() {
     ${BOLD}${YELLOW}补全插件${RESET}${RESET}:输入已知命令或函数的部分字符后，按下${BOLD}${BLUE}TAB键⇄${RESET}${RESET}
     用法示例：输入${GREEN}zsht${RESET}后，按下${BLUE}⇄${RESET}补全为${GREEN}zshtheme${RESET},按下空格，再按下${BLUE}TAB键${RESET}
     ${BOLD}${YELLOW}Description${RESET}${RESET}:You can press ${BOLD}${BLUE}TAB KEY ⇄ ${RESET}${RESET} to use auto completion plugin.
-    For example,type ${GREEN}git${RESET},and press space key, and press ${BLUE}⇄${RESET}
+    For ezample,type ${GREEN}git${RESET},and press space key, and press ${BLUE}⇄${RESET}
     ------------
     ${BOLD}${YELLOW}插件名称PLUGIN NAME${RESET}${RESET}:${BOLD}${BLUE}zsh-autosuggestions${RESET}${RESET}
     ${BOLD}${YELLOW}历史记录插件用法${RESET}${RESET}:输入曾输过的命令，按方向键上${BOLD}${YELLOW}↑${RESET}或右${BOLD}${YELLOW}→${RESET}进行补全。

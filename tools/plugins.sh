@@ -134,7 +134,7 @@ zinit_csearch() {
     ${BOLD}${YELLOW}Description${RESET}${RESET}: ${BLUE}Search for available completions from any plugin${RESET}.
     ${BOLD}${YELLOW}描述${RESET}${RESET}: ${BLUE}对插件目录进行搜索，列举所有可用补全，并显示其安装状态。${RESET}
     You can type ${GREEN}zi cenable${RESET} ${BLUE}\$PLUGIN_COMMAND${RESET} to enable completion,type ${GREEN}zi cdisnable${RESET} ${BLUE}\$PLUGIN_COMMAND${RESET} to disable it.
-    For example,you can type ${GREEN}zi cenable${RESET} ${BLUE}docker${RESET} to enable docker's completion.
+    For ezample,you can type ${GREEN}zi cenable${RESET} ${BLUE}docker${RESET} to enable docker's completion.
     示例：输${GREEN}zi cenable${RESET} ${BLUE}adb${RESET}启用adb的补全。
 EOF
 }
@@ -817,7 +817,7 @@ tmoe_zsh_plugin_menu_03() {
         ;;
     04)
         TMOE_ZSH_GREP_NAME='history'
-        TMOE_ZSH_COMMENT_CONTENT='Provides a couple of convenient aliases for using the `history` command to examine your command line history.'
+        TMOE_ZSH_COMMENT_CONTENT='Provides a couple of convenient aliases for using the `history` command to ezamine your command line history.'
         ;;
     05)
         TMOE_ZSH_GREP_NAME='history-substring-search'

@@ -369,7 +369,7 @@ check_gnu_linux_dependencies_01() {
 }
 ####################################################
 install_gnu_linux_dependencies() {
-    #bat exa fzf爲可選依賴
+    #bat eza fzf爲可選依賴
     #apk add -q xz newt tar zsh git wget bash zsh-vcs pv
     #dnf install -y zsh git pv wget xz tar newt
     if [ ! -z "${DEPENDENCIES}" ]; then
@@ -433,13 +433,13 @@ check_gnu_linux_dependencies_02() {
 ################
 check_gnu_linux_dependencies_03() {
     DEPENDENCIES=""
-    if [ ! $(command -v exa) ] && [ ! -e ${TMOE_ZSH_DIR}/non_install_exa ]; then
+    if [ ! $(command -v eza) ] && [ ! -e ${TMOE_ZSH_DIR}/non_install_eza ]; then
         case "${LINUX_DISTRO}" in
-        gentoo) DEPENDENCIES="${DEPENDENCIES} sys-apps/exa" ;;
-        alpine | arch | debian | suse | solus) DEPENDENCIES="${DEPENDENCIES} exa" ;;
+        gentoo) DEPENDENCIES="${DEPENDENCIES} sys-apps/eza" ;;
+        alpine | arch | debian | suse | solus) DEPENDENCIES="${DEPENDENCIES} eza" ;;
         redhat)
             case "${REDHAT_DISTRO}" in
-            fedora) DEPENDENCIES="${DEPENDENCIES} exa" ;;
+            fedora) DEPENDENCIES="${DEPENDENCIES} eza" ;;
             esac
             ;;
         esac
@@ -455,8 +455,8 @@ check_gnu_linux_dependencies_03() {
     #     esac
     # fi
 
-    if [ $(command -v zsh) ] && [ ! $(command -v exa) ]; then
-        printf '%s\n' '' >${TMOE_ZSH_DIR}/non_install_exa
+    if [ $(command -v zsh) ] && [ ! $(command -v eza) ]; then
+        printf '%s\n' '' >${TMOE_ZSH_DIR}/non_install_eza
     fi
 }
 ##############
@@ -495,7 +495,7 @@ check_termux_dependencies() {
     fi
     DEPENDENCIES=""
 
-    for i in bat curl exa fzf pv tar wget zsh; do
+    for i in bat curl eza fzf pv tar wget zsh; do
         if [ ! -e "${PREFIX}/bin/${i}" ]; then
             DEPENDENCIES="${DEPENDENCIES} ${i}"
         fi
